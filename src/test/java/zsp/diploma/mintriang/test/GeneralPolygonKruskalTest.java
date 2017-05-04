@@ -2,6 +2,7 @@ package zsp.diploma.mintriang.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import zsp.diploma.mintriang.algorithm.TriangulationAlgorithm;
 import zsp.diploma.mintriang.algorithm.step.impl.GrahamScan;
 import zsp.diploma.mintriang.algorithm.step.impl.GeneralPolygonKruskal;
 import zsp.diploma.mintriang.exception.InvalidInputPointsException;
@@ -27,11 +28,11 @@ public class GeneralPolygonKruskalTest extends BaseTest {
     public void testTriangle() throws TriangulationException {
         List<Point> points = buildPoints(new Vector(-1, -1), new Vector(-1, 0), new Vector(-1, 1), new Vector(-1, 2),
                 new Vector(0, 1), new Vector(1, 0), new Vector(2, -1), new Vector(1, -1), new Vector(0, -1),
-                new Vector(-1, -1), new Vector(0, 0));
+                new Vector(0, 0));
 
         List<Edge> edges = buildEdges(points, new Pair<>(0, 1), new Pair<>(1, 2), new Pair<>(2, 3), new Pair<>(3, 4),
-                new Pair<>(4, 5), new Pair<>(5, 6), new Pair<>(6, 7), new Pair<>(7, 8), new Pair<>(8, 9),
-                new Pair<>(8, 10));
+                new Pair<>(4, 5), new Pair<>(5, 6), new Pair<>(6, 7), new Pair<>(7, 8), new Pair<>(8, 0),
+                new Pair<>(8, 9));
 
         testGeneralPolygonKruskal(points, edges);
     }
@@ -63,30 +64,6 @@ public class GeneralPolygonKruskalTest extends BaseTest {
                 new Pair<>(4, 5), new Pair<>(5, 6), new Pair<>(6, 7), new Pair<>(7, 0), new Pair<>(7, 8));
 
         testGeneralPolygonKruskal(points, edges);
-    }
-
-    @Test(expected = InvalidInputPointsException.class)
-    public void testNotEnoughPoints() throws TriangulationException {
-        List<Point> points = buildPoints(new Vector(-1, -1), new Vector(-1, 0));
-        testGeneralPolygonKruskal(points, null);
-    }
-
-    @Test(expected = InvalidInputPointsException.class)
-    public void testLine() throws TriangulationException {
-        List<Point> points = buildPoints(new Vector(1, -1), new Vector(1, 0), new Vector(1, 1), new Vector(1, 2),
-                new Vector(1, -1), new Vector(1, 10), new Vector(1, -100), new Vector(1, 1000), new Vector(1, -1000));
-
-        testGeneralPolygonKruskal(points, null);
-    }
-
-    @Test(expected = InvalidInputPointsException.class)
-    public void testLine2() throws TriangulationException {
-        List<Point> points = buildPoints(new Vector(1.12736782, -1.1231), new Vector(1.12736782, 0.12312),
-                new Vector(1.12736782, 1.6345), new Vector(1.12736782, 2.32432), new Vector(1.12736782, -1.87567),
-                new Vector(1.12736782, 10.6575), new Vector(1.12736782, -100.56756), new Vector(1.12736782, 1000.123),
-                new Vector(1.12736782, -1000.7546));
-
-        testGeneralPolygonKruskal(points, null);
     }
 
     @Test

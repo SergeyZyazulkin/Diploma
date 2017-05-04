@@ -67,7 +67,7 @@ public class UnitedTriangulation implements UnitedTriangulationStep {
         dicotNetwork.getSource().setVisited(true);
 
         while (!vertices.isEmpty()) {
-            GraphEdge next = vertices.getLast().getFirstNotVisited(false);
+            GraphEdge next = vertices.getLast().getFirstNotVisited(true);
 
             if (next != null) {
                 next.getAnotherVertex().setVisited(true);

@@ -43,6 +43,7 @@ public class Heuristic2 implements TriangulationAlgorithm {
 
     @Override
     public Triangulation triangulate(List<Point> points) throws TriangulationException {
+        points = checkInput(points);
         ConvexHull convexHull = convexHullStep.buildConvexHull(geometryFactory, points);
         List<GeneralPolygon> generalPolygons = generalPolygonsStep.buildGeneralPolygons(geometryFactory, convexHull);
 

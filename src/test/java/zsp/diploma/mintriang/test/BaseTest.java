@@ -1,6 +1,16 @@
 package zsp.diploma.mintriang.test;
 
+import org.junit.Assert;
 import org.junit.Ignore;
+import org.junit.Test;
+import zsp.diploma.mintriang.algorithm.TriangulationAlgorithm;
+import zsp.diploma.mintriang.algorithm.UnionAlgorithm;
+import zsp.diploma.mintriang.algorithm.impl.Greedy;
+import zsp.diploma.mintriang.algorithm.impl.Heuristic1;
+import zsp.diploma.mintriang.algorithm.impl.Heuristic2;
+import zsp.diploma.mintriang.algorithm.impl.TriangulationUnion;
+import zsp.diploma.mintriang.algorithm.step.impl.*;
+import zsp.diploma.mintriang.exception.TriangulationException;
 import zsp.diploma.mintriang.model.base.Pair;
 import zsp.diploma.mintriang.model.base.Vector;
 import zsp.diploma.mintriang.model.geometry.Edge;
@@ -80,5 +90,54 @@ public class BaseTest {
 
     private static double getRandom() {
         return (Math.random() - 0.5) * LIMIT;
+    }
+
+    public void testAll() throws TriangulationException {
+        Heuristic1 heuristic1 = Heuristic1.newBuilder()
+                .setGeometryFactory(geometryFactory)
+                .setConvexHullStep(new GrahamScan())
+                .setGeneralPolygonStep(new GeneralPolygonKruskal())
+                .setGeneralPolygonTriangulationStep(new GeneralPolygonTriangulation())
+                .build();
+
+        Heuristic2 heuristic2 = Heuristic2.newBuilder()
+                .setGeometryFactory(geometryFactory)
+                .setConvexHullStep(new GrahamScan())
+                .setGeneralPolygonsStep(new GeneralPolygonsKruskal())
+                .setGeneralPolygonTriangulationStep(new GeneralPolygonTriangulation())
+                .build();
+
+        UnionAlgorithm union = TriangulationUnion.newBuilder()
+                .setGeometryFactory(geometryFactory)
+                .setDicotNetworkStep(new IntersectionGraph())
+                .setUnitedTriangulationStep(new UnitedTriangulation())
+                .build();
+
+        TriangulationAlgorithm greedy = new Greedy(geometryFactory);
+
+        List<Point> points1 = getRandomPoints(100);
+        List<Point> points2 = clone(points1);
+        List<Point> points3 = clone(points1);
+
+        Triangulation triangulation1 = heuristic1.triangulate(points1);
+        Triangulation triangulation2 = heuristic2.triangulate(points2);
+        Triangulation triangulation3 = greedy.triangulate(points3);
+        Triangulation united1 = union.unite(triangulation1, triangulation2);
+        Triangulation united2 = union.unite(united1, triangulation3);
+
+        Visualizer.visualize(triangulation1, "heuristic1.png");
+        Visualizer.visualize(triangulation2, "heuristic2.png");
+        Visualizer.visualize(triangulation3, "greedy.png");
+        Visualizer.visualize(united1, "united1.png");
+        Visualizer.visualize(united2, "united2.png");
+
+        System.out.println(String.format("Heuristic1: %f\nHeuristic2: %f\nGreedy: %f\nUnited1: %f\nUnited2: %f",
+                triangulation1.getLength(), triangulation2.getLength(), triangulation3.getLength(),
+                united1.getLength(), united2.getLength()));
+
+        Assert.assertTrue(triangulation1.getEdges().size() == triangulation2.getEdges().size());
+        Assert.assertTrue(triangulation1.getEdges().size() == triangulation3.getEdges().size());
+        Assert.assertTrue(triangulation1.getEdges().size() == united1.getEdges().size());
+        Assert.assertTrue(triangulation1.getEdges().size() == united2.getEdges().size());
     }
 }

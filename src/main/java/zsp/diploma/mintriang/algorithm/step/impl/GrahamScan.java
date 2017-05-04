@@ -22,23 +22,11 @@ public class GrahamScan implements ConvexHullStep {
     public ConvexHull buildConvexHull(GeometryFactory geometryFactory, List<Point> points)
             throws TriangulationException {
 
-        points = checkInput(points);
         min = points.parallelStream().min(this::findMinYMinX).get();
         points.parallelStream().forEach(this::setPolarAngleData);
         points = points.parallelStream().sorted(this::sortByPolarAngle).collect(Collectors.toList());
         int pointsOnConvexHull = findConvexHull(points);
-        checkPoints(points, pointsOnConvexHull);
         return buildConvexHull(geometryFactory, points, pointsOnConvexHull);
-    }
-
-    private List<Point> checkInput(List<Point> points) throws InvalidInputPointsException {
-        List<Point> uniquePoints = Converter.toUniqueList(points);
-
-        if (uniquePoints == null || uniquePoints.size() < 3) {
-            throw new InvalidInputPointsException();
-        }
-
-        return uniquePoints;
     }
 
     private int findMinYMinX(Point p1, Point p2) {
@@ -130,22 +118,6 @@ public class GrahamScan implements ConvexHullStep {
         }
 
         return pointsOnConvexHull;
-    }
-
-    private void checkPoints(List<Point> points, int pointsOnConvexHull) throws InvalidInputPointsException {
-        boolean invalid = true;
-
-        for (int i = 1; i < pointsOnConvexHull && invalid; ++i) {
-            if (Geometry.calcTurn(points.get(i - 1), points.get(i), points.get(i + 1)) != Geometry.Turn.COLLINEAR) {
-                invalid = false;
-            }
-        }
-
-        if (invalid && Geometry.calcTurn(points.get(pointsOnConvexHull - 1), points.get(0), points.get(1))
-                == Geometry.Turn.COLLINEAR) {
-
-            throw new InvalidInputPointsException();
-        }
     }
 
     private ConvexHull buildConvexHull(GeometryFactory geometryFactory, List<Point> points, int pointsOnConvexHull) {

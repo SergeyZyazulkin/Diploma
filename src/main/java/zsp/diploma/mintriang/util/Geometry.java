@@ -1,5 +1,6 @@
 package zsp.diploma.mintriang.util;
 
+import zsp.diploma.mintriang.exception.InvalidInputPointsException;
 import zsp.diploma.mintriang.model.base.DisjointDataSet;
 import zsp.diploma.mintriang.model.geometry.Edge;
 import zsp.diploma.mintriang.model.geometry.GeneralPolygon;
@@ -101,6 +102,25 @@ public class Geometry {
                 edge.addToPoints();
                 generalPolygon.addEdge(edge);
             }
+        }
+    }
+
+    public static void checkCollinear(List<Point> points, int count) throws InvalidInputPointsException {
+        boolean invalid = true;
+        points.add(count, points.get(0));
+
+        for (int i = 1; i < count && invalid; ++i) {
+            if (Geometry.calcTurn(points.get(i - 1), points.get(i), points.get(i + 1)) != Geometry.Turn.COLLINEAR) {
+                invalid = false;
+            }
+        }
+
+        points.remove(count);
+
+        if (invalid &&
+                Geometry.calcTurn(points.get(count - 1), points.get(0), points.get(1)) == Geometry.Turn.COLLINEAR) {
+
+            throw new InvalidInputPointsException();
         }
     }
 

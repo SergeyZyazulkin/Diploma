@@ -38,11 +38,11 @@ public class GeneralPolygonsKruskalTest extends BaseTest {
     public void testTriangle() throws TriangulationException {
         List<Point> points = buildPoints(new Vector(-1, -1), new Vector(-1, 0), new Vector(-1, 1), new Vector(-1, 2),
                 new Vector(0, 1), new Vector(1, 0), new Vector(2, -1), new Vector(1, -1), new Vector(0, -1),
-                new Vector(-1, -1), new Vector(0, 0));
+                new Vector(0, 0));
 
         List<List<Point>> pointsList = new ArrayList<List<Point>>() {{
-            add(buildPoints(points, 0, 1, 2, 4, 10, 8));
-            add(buildPoints(points, 8, 10, 4, 5, 7));
+            add(buildPoints(points, 0, 1, 2, 4, 9, 8));
+            add(buildPoints(points, 8, 9, 4, 5, 7));
             add(buildPoints(points, 5, 6, 7));
             add(buildPoints(points, 2, 3, 4));
         }};
@@ -83,30 +83,6 @@ public class GeneralPolygonsKruskalTest extends BaseTest {
         }};
 
         testGeneralPolygonsKruskal(points, pointsList, 9);
-    }
-
-    @Test(expected = InvalidInputPointsException.class)
-    public void testNotEnoughPoints() throws TriangulationException {
-        List<Point> points = buildPoints(new Vector(-1, -1), new Vector(-1, 0));
-        testGeneralPolygonsKruskal(points, null);
-    }
-
-    @Test(expected = InvalidInputPointsException.class)
-    public void testLine() throws TriangulationException {
-        List<Point> points = buildPoints(new Vector(1, -1), new Vector(1, 0), new Vector(1, 1), new Vector(1, 2),
-                new Vector(1, -1), new Vector(1, 10), new Vector(1, -100), new Vector(1, 1000), new Vector(1, -1000));
-
-        testGeneralPolygonsKruskal(points, null);
-    }
-
-    @Test(expected = InvalidInputPointsException.class)
-    public void testLine2() throws TriangulationException {
-        List<Point> points = buildPoints(new Vector(1.12736782, -1.1231), new Vector(1.12736782, 0.12312),
-                new Vector(1.12736782, 1.6345), new Vector(1.12736782, 2.32432), new Vector(1.12736782, -1.87567),
-                new Vector(1.12736782, 10.6575), new Vector(1.12736782, -100.56756), new Vector(1.12736782, 1000.123),
-                new Vector(1.12736782, -1000.7546));
-
-        testGeneralPolygonsKruskal(points, null);
     }
 
     @Test
