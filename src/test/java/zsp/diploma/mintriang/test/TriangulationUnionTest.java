@@ -31,14 +31,11 @@ public class TriangulationUnionTest extends BaseTest {
                 .build();
 
         Triangulation result = unionAlgorithm.unite(triangulation1, triangulation2);
-        Visualizer.visualize(triangulation1, "tr1.png");
-        Visualizer.visualize(triangulation2, "tr2.png");
         visualize(result);
 
         double length1 = triangulation1.getLength();
         double length2 = triangulation2.getLength();
         double resultLength = result.getLength();
-        System.out.println(String.format("L1: %f\nL2: %f\nRS: %f", length1, length2, resultLength));
         Assert.assertTrue(resultLength <= length1 + 0.0000001 && resultLength <= length2 + 0.0000001);
     }
 

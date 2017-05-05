@@ -9,4 +9,6 @@ public interface Edge {
     double getLength();
 
     Edge addToPoints();
+
+    Edge remove();
 }

@@ -12,6 +12,8 @@ public interface Point {
 
     Point addEdge(Edge edge);
 
+    Point removeEdge(Edge edge);
+
     int getIndex();
 
     Point setIndex(int index);

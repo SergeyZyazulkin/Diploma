@@ -55,6 +55,17 @@ public class PointImpl implements Point {
     }
 
     @Override
+    public Point removeEdge(Edge edge) {
+        if (equals(edge.getFirstPoint())) {
+            edges.remove(edge.getSecondPoint());
+        } else {
+            edges.remove(edge.getFirstPoint());
+        }
+
+        return this;
+    }
+
+    @Override
     public int getIndex() {
         return index;
     }

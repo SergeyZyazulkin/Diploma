@@ -39,6 +39,13 @@ public class EdgeImpl implements Edge {
     }
 
     @Override
+    public Edge remove() {
+        p1.removeEdge(this);
+        p2.removeEdge(this);
+        return this;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
