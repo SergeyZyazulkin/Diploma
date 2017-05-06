@@ -53,18 +53,14 @@ public class Geometry {
     }
 
     public static boolean isInside(Point p1, Point p2, Point p3, Point p4) {
+        return isInside(p1, p2, p3) && isInside(p1, p2, p4) ||
+                isInside(p3, p4, p1) && isInside(p3, p4, p2);
+    }
+
+    public static boolean isInside(Point p1, Point p2, Point p3) {
         return Line2D.ptSegDist(p1.getCoordinates().getX(), p1.getCoordinates().getY(),
                 p2.getCoordinates().getX(), p2.getCoordinates().getY(),
-                p3.getCoordinates().getX(), p3.getCoordinates().getY()) == 0 &&
-                Line2D.ptSegDist(p1.getCoordinates().getX(), p1.getCoordinates().getY(),
-                        p2.getCoordinates().getX(), p2.getCoordinates().getY(),
-                        p4.getCoordinates().getX(), p4.getCoordinates().getY()) == 0 ||
-                Line2D.ptSegDist(p3.getCoordinates().getX(), p3.getCoordinates().getY(),
-                        p4.getCoordinates().getX(), p4.getCoordinates().getY(),
-                        p1.getCoordinates().getX(), p1.getCoordinates().getY()) == 0 &&
-                        Line2D.ptSegDist(p3.getCoordinates().getX(), p3.getCoordinates().getY(),
-                                p4.getCoordinates().getX(), p4.getCoordinates().getY(),
-                                p2.getCoordinates().getX(), p2.getCoordinates().getY()) == 0;
+                p3.getCoordinates().getX(), p3.getCoordinates().getY()) == 0;
     }
 
     public static boolean isIntersect(Point p1, Point p2, Point p3, Point p4) {

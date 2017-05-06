@@ -118,7 +118,7 @@ public class BaseTest {
 
         TriangulationAlgorithm greedy = new Greedy(geometryFactory);
 
-        List<Point> points1 = getRandomPoints(300);
+        List<Point> points1 = getRandomPoints(1000);
         List<Point> points2 = clone(points1);
         List<Point> points3 = clone(points1);
         List<Point> points4 = clone(points1);

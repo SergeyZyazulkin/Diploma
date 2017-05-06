@@ -80,6 +80,16 @@ public class TriangulationImpl implements ConvexHull, GeneralPolygon, Triangulat
     }
 
     @Override
+    public Triangulation normalize() {
+        allPoints.parallelStream()
+                .unordered()
+                .forEach(Point::clearNeighbours);
+
+        edges.forEach(Edge::addToPoints);
+        return this;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 

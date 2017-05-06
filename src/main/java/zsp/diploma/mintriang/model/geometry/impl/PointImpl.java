@@ -133,6 +133,12 @@ public class PointImpl implements Point {
     }
 
     @Override
+    public Point clearNeighbours() {
+        edges.clear();
+        return this;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

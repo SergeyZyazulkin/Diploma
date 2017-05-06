@@ -9,4 +9,6 @@ public interface Triangulation {
     List<Edge> getEdges();
 
     double getLength();
+
+    Triangulation normalize();
 }

@@ -6,6 +6,7 @@ import zsp.diploma.mintriang.exception.AlgorithmIncompleteException;
 import zsp.diploma.mintriang.exception.TriangulationException;
 import zsp.diploma.mintriang.model.geometry.*;
 import zsp.diploma.mintriang.util.Checker;
+import zsp.diploma.mintriang.util.Visualizer;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class Delaunay implements TriangulationAlgorithm {
     public Triangulation triangulate(List<Point> points) throws TriangulationException {
         points = checkInput(points);
         Triangulation baseTriangulation = baseTriangulationStep.buildBaseTriangulation(geometryFactory, points);
+        Visualizer.visualize(baseTriangulation, "temp.png");
         return delaunayConditionStep.improveTriangulation(geometryFactory, baseTriangulation);
     }
 

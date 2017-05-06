@@ -35,4 +35,6 @@ public interface Point {
     boolean isVisited();
 
     Point clonePoint();
+
+    Point clearNeighbours();
 }
