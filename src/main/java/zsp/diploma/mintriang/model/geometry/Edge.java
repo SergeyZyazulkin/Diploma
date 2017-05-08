@@ -6,6 +6,10 @@ public interface Edge {
 
     Point getSecondPoint();
 
+    Edge setFirstPoint(Point point);
+
+    Edge setSecondPoint(Point point);
+
     double getLength();
 
     Edge addToPoints();

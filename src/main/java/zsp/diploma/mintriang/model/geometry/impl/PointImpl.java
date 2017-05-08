@@ -13,6 +13,7 @@ public class PointImpl implements Point {
     private NavigableSet<Point> edges;
     private Vector data;
     private Point parent;
+    private Point child;
     private int index;
     private int visited;
 
@@ -163,6 +164,12 @@ public class PointImpl implements Point {
     }
 
     public Point clonePoint() {
-        return new PointImpl(coordinates);
+        child = new PointImpl(coordinates);
+        return child;
+    }
+
+    @Override
+    public Point getChild() {
+        return child;
     }
 }

@@ -4,10 +4,11 @@ import zsp.diploma.mintriang.model.geometry.*;
 import zsp.diploma.mintriang.util.Converter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class TriangulationImpl implements ConvexHull, GeneralPolygon, Triangulation {
+public class TriangulationImpl implements Hull, GeneralPolygon, Triangulation {
 
     private List<Point> boundaryPoints;
     private List<Point> allPoints;
@@ -84,6 +85,18 @@ public class TriangulationImpl implements ConvexHull, GeneralPolygon, Triangulat
         allPoints.parallelStream()
                 .unordered()
                 .forEach(Point::clearNeighbours);
+
+        edges.parallelStream()
+                .unordered()
+                .forEach(e -> {
+                    for (Point p : allPoints) {
+                        if (e.getFirstPoint().equals(p)) {
+                            e.setFirstPoint(p);
+                        } else if (e.getSecondPoint().equals(p)) {
+                            e.setSecondPoint(p);
+                        }
+                    }
+                });
 
         edges.forEach(Edge::addToPoints);
         return this;

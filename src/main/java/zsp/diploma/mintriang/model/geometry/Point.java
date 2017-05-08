@@ -24,6 +24,8 @@ public interface Point {
 
     Point getParent();
 
+    Point getChild();
+
     int getNeighboursCount();
 
     int getVisited();

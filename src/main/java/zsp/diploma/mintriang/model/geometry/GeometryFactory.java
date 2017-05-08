@@ -10,13 +10,15 @@ public interface GeometryFactory {
 
     Edge createEdge(Point p1, Point p2, boolean real);
 
-    ConvexHull createConvexHull(List<Point> boundaryPoints, List<Point> allPoints, List<Edge> edges);
+    Hull createHull(List<Point> boundaryPoints, List<Point> allPoints, List<Edge> edges);
 
-    GeneralPolygon createGeneralPolygon(ConvexHull convexHull);
+    Hull createHull(Triangulation triangulation);
+
+    GeneralPolygon createGeneralPolygon(Hull hull);
 
     GeneralPolygon createGeneralPolygon(List<Point> boundaryPoints, List<Point> points, List<Edge> edges);
 
-    Triangulation createTriangulation(ConvexHull convexHull);
+    Triangulation createTriangulation(Hull hull);
 
     Triangulation createTriangulation(GeneralPolygon generalPolygon);
 

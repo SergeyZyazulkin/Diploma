@@ -15,6 +15,7 @@ import zsp.diploma.mintriang.model.geometry.GeometryFactory;
 import zsp.diploma.mintriang.model.geometry.Point;
 import zsp.diploma.mintriang.model.geometry.Triangulation;
 import zsp.diploma.mintriang.model.geometry.impl.GeometryFactoryImpl;
+import zsp.diploma.mintriang.test.util.Visualizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,43 +91,55 @@ public class BaseTest {
     }
 
     public void testAll() throws TriangulationException {
-        Heuristic1 heuristic1 = Heuristic1.newBuilder()
+        MTHeuristic1 mtHeuristic1 = MTHeuristic1.newBuilder()
                 .setGeometryFactory(geometryFactory)
-                .setConvexHullStep(new GrahamScan())
-                .setGeneralPolygonStep(new GeneralPolygonKruskal())
-                .setGeneralPolygonTriangulationStep(new GeneralPolygonTriangulation())
+                .setConvexHullBuilder(new ConvexHullBuilderImpl())
+                .setConvexGeneralPolygonBuilder(new ConvexGeneralPolygonBuilderImpl())
+                .setGeneralPolygonTriangulationBuilder(new GeneralPolygonTriangulationBuilderImpl())
                 .build();
 
-        Heuristic2 heuristic2 = Heuristic2.newBuilder()
+        MTHeuristic2 mtHeuristic2 = MTHeuristic2.newBuilder()
                 .setGeometryFactory(geometryFactory)
-                .setConvexHullStep(new GrahamScan())
-                .setGeneralPolygonsStep(new GeneralPolygonsKruskal())
-                .setGeneralPolygonTriangulationStep(new GeneralPolygonTriangulation())
+                .setConvexHullBuilder(new ConvexHullBuilderImpl())
+                .setGeneralPolygonsBuilder(new GeneralPolygonsBuilderImpl())
+                .setGeneralPolygonTriangulationBuilder(new GeneralPolygonTriangulationBuilderImpl())
                 .build();
 
-        Delaunay delaunay = Delaunay.newBuilder()
+        DelaunayTriangulationAlgorithm delaunayTriangulationAlgorithm = DelaunayTriangulationAlgorithm.newBuilder()
                 .setGeometryFactory(geometryFactory)
-                .setBaseTriangulationStep(new BaseTriangulation())
-                .setDelaunayConditionStep(new DelaunayCondition())
+                .setBaseTriangulationBuilder(new BaseTriangulationBuilderImpl())
+                .setDelaunayConditionChecker(new DelaunayConditionCheckerImpl())
                 .build();
 
-        UnionAlgorithm union = TriangulationUnion.newBuilder()
+        UnionAlgorithm union = TriangulationUnionAlgorithm.newBuilder()
                 .setGeometryFactory(geometryFactory)
-                .setDicotNetworkStep(new IntersectionGraph())
-                .setUnitedTriangulationStep(new UnitedTriangulation())
+                .setDicotNetworkBuilder(new DicotNetworkBuilderImpl())
+                .setTriangulationCombiner(new TriangulationCombinerImpl())
                 .build();
 
-        TriangulationAlgorithm greedy = new Greedy(geometryFactory);
+        LocalImprovementAlgorithm localImprovementAlgorithm = LocalImprovementAlgorithm.newBuilder()
+                .setGeometryFactory(geometryFactory)
+                .setLocalTriangulationExtractor(new LocalTriangulationExtractorImpl())
+                .setGeneralPolygonTriangulationBuilder(new GeneralPolygonTriangulationBuilderImpl())
+                .setTriangulationUnionAlgorithm(TriangulationUnionAlgorithm.newBuilder()
+                        .setGeometryFactory(geometryFactory)
+                        .setDicotNetworkBuilder(new DicotNetworkBuilderImpl())
+                        .setTriangulationCombiner(new TriangulationCombinerImpl())
+                        .build())
+                .setLocalTriangulationCombiner(new LocalTriangulationCombinerImpl())
+                .build();
 
-        List<Point> points1 = getRandomPoints(1000);
+        TriangulationAlgorithm greedy = new GreedyTriangulationAlgorithm(geometryFactory);
+
+        List<Point> points1 = getRandomPoints(300);
         List<Point> points2 = clone(points1);
         List<Point> points3 = clone(points1);
         List<Point> points4 = clone(points1);
 
-        Triangulation triangulation1 = heuristic1.triangulate(points1);
-        Triangulation triangulation2 = heuristic2.triangulate(points2);
+        Triangulation triangulation1 = mtHeuristic1.triangulate(points1);
+        Triangulation triangulation2 = mtHeuristic2.triangulate(points2);
         Triangulation triangulation3 = greedy.triangulate(points3);
-        Triangulation triangulation4 = delaunay.triangulate(points4);
+        Triangulation triangulation4 = delaunayTriangulationAlgorithm.triangulate(points4);
         Triangulation united1 = union.unite(triangulation1, triangulation2);
         Triangulation united2 = union.unite(united1, triangulation3);
         Triangulation united3 = union.unite(united2, triangulation4);
@@ -139,16 +152,25 @@ public class BaseTest {
         Visualizer.visualize(united2, "united2.png");
         Visualizer.visualize(united3, "united3.png");
 
+        double united3Length = united3.getLength();
+        int united3Size = united3.getEdges().size();
+        Triangulation improved = localImprovementAlgorithm.improveTriangulation(united3);
+        Visualizer.visualize(improved, "improved.png");
+
         System.out.println(String.format(
-                "Heuristic1: %f\nHeuristic2: %f\nGreedy: %f\nDelaunay: %f\nUnited1: %f\nUnited2: %f\nUnited3: %f",
-                triangulation1.getLength(), triangulation2.getLength(), triangulation3.getLength(),
-                triangulation4.getLength(), united1.getLength(), united2.getLength(), united3.getLength()));
+                "Heuristic1: %f\nHeuristic2: %f\nGreedy: %f\nDelaunay: %f\n" +
+                        "United1: %f\nUnited2: %f\nUnited3: %f\nImproved: %f",
+                triangulation1.getLength(), triangulation2.getLength(),
+                triangulation3.getLength(), triangulation4.getLength(),
+                united1.getLength(), united3.getLength(),
+                united3Length, improved.getLength()));
 
         Assert.assertTrue(triangulation1.getEdges().size() == triangulation2.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == triangulation3.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == triangulation4.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == united1.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == united2.getEdges().size());
-        Assert.assertTrue(triangulation1.getEdges().size() == united3.getEdges().size());
+        Assert.assertTrue(triangulation1.getEdges().size() == united3Size);
+        Assert.assertTrue(triangulation1.getEdges().size() == improved.getEdges().size());
     }
 }

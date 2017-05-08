@@ -27,6 +27,18 @@ public class EdgeImpl implements Edge {
     }
 
     @Override
+    public Edge setFirstPoint(Point point) {
+        this.p1 = point;
+        return this;
+    }
+
+    @Override
+    public Edge setSecondPoint(Point point) {
+        this.p2 = point;
+        return this;
+    }
+
+    @Override
     public double getLength() {
         return length;
     }

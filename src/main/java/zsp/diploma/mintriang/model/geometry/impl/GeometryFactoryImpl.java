@@ -26,13 +26,18 @@ public class GeometryFactoryImpl implements GeometryFactory {
     }
 
     @Override
-    public ConvexHull createConvexHull(List<Point> boundaryPoints, List<Point> allPoints, List<Edge> edges) {
+    public Hull createHull(Triangulation triangulation) {
+        return (Hull) triangulation;
+    }
+
+    @Override
+    public Hull createHull(List<Point> boundaryPoints, List<Point> allPoints, List<Edge> edges) {
         return new TriangulationImpl(boundaryPoints, allPoints, edges);
     }
 
     @Override
-    public GeneralPolygon createGeneralPolygon(ConvexHull convexHull) {
-        return (GeneralPolygon) convexHull;
+    public GeneralPolygon createGeneralPolygon(Hull hull) {
+        return (GeneralPolygon) hull;
     }
 
     @Override
@@ -59,8 +64,8 @@ public class GeometryFactoryImpl implements GeometryFactory {
     }
 
     @Override
-    public Triangulation createTriangulation(ConvexHull convexHull) {
-        return (Triangulation) convexHull;
+    public Triangulation createTriangulation(Hull hull) {
+        return (Triangulation) hull;
     }
 
     @Override
