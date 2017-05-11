@@ -7,6 +7,9 @@ import zsp.diploma.mintriang.algorithm.impl.*;
 import zsp.diploma.mintriang.algorithm.step.BaseTriangulationBuilder;
 import zsp.diploma.mintriang.algorithm.step.impl.*;
 import zsp.diploma.mintriang.exception.TriangulationException;
+import zsp.diploma.mintriang.model.base.Pair;
+import zsp.diploma.mintriang.model.base.Vector;
+import zsp.diploma.mintriang.model.geometry.Edge;
 import zsp.diploma.mintriang.model.geometry.Point;
 import zsp.diploma.mintriang.model.geometry.Triangulation;
 
@@ -34,6 +37,13 @@ public class LocalImprovementAlgorithmTest extends BaseTest {
         System.out.println(String.format("Base: %f\nImproved: %f\n", baseLength, improvedLength));
         Assert.assertTrue(triangulation.getEdges().size() == improved.getEdges().size());
         Assert.assertTrue(improvedLength <= baseLength + 0.0000001);
+    }
+
+    @Test
+    public void testTriangle() throws TriangulationException {
+        List<Point> points = buildPoints(new Vector(-1, -1), new Vector(1, -1), new Vector(0, 1));
+        List<Edge> edges = buildEdges(points, new Pair<>(0, 1), new Pair<>(1, 2), new Pair<>(2, 0));
+        testLocalImprovementAlgorithm(buildTriangulation(points, edges));
     }
 
     @Test

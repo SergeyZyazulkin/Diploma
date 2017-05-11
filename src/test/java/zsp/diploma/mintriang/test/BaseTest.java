@@ -130,47 +130,56 @@ public class BaseTest {
                 .build();
 
         TriangulationAlgorithm greedy = new GreedyTriangulationAlgorithm(geometryFactory);
+        TriangulationAlgorithm random = new RandomTriangulationAlgorithm(geometryFactory);
 
         List<Point> points1 = getRandomPoints(300);
         List<Point> points2 = clone(points1);
         List<Point> points3 = clone(points1);
         List<Point> points4 = clone(points1);
+        List<Point> points5 = clone(points1);
 
         Triangulation triangulation1 = mtHeuristic1.triangulate(points1);
         Triangulation triangulation2 = mtHeuristic2.triangulate(points2);
         Triangulation triangulation3 = greedy.triangulate(points3);
         Triangulation triangulation4 = delaunayTriangulationAlgorithm.triangulate(points4);
+        Triangulation triangulation5 = random.triangulate(points5);
         Triangulation united1 = union.unite(triangulation1, triangulation2);
         Triangulation united2 = union.unite(united1, triangulation3);
         Triangulation united3 = union.unite(united2, triangulation4);
+        Triangulation united4 = union.unite(united3, triangulation5);
 
         Visualizer.visualize(triangulation1, "heuristic1.png");
         Visualizer.visualize(triangulation2, "heuristic2.png");
         Visualizer.visualize(triangulation3, "greedy.png");
         Visualizer.visualize(triangulation4, "delaunay.png");
+        Visualizer.visualize(triangulation5, "random.png");
         Visualizer.visualize(united1, "united1.png");
         Visualizer.visualize(united2, "united2.png");
         Visualizer.visualize(united3, "united3.png");
+        Visualizer.visualize(united4, "united4.png");
 
-        double united3Length = united3.getLength();
-        int united3Size = united3.getEdges().size();
-        Triangulation improved = localImprovementAlgorithm.improveTriangulation(united3);
+        double united4Length = united4.getLength();
+        int united4Size = united4.getEdges().size();
+        Triangulation improved = localImprovementAlgorithm.improveTriangulation(united4);
         Visualizer.visualize(improved, "improved.png");
 
         System.out.println(String.format(
-                "Heuristic1: %f\nHeuristic2: %f\nGreedy: %f\nDelaunay: %f\n" +
-                        "United1: %f\nUnited2: %f\nUnited3: %f\nImproved: %f",
+                "Heuristic1: %f\nHeuristic2: %f\nGreedy: %f\nDelaunay: %f\nRandom: %f\n" +
+                        "United1: %f\nUnited2: %f\nUnited3: %f\nUnited4: %f\nImproved: %f",
                 triangulation1.getLength(), triangulation2.getLength(),
                 triangulation3.getLength(), triangulation4.getLength(),
-                united1.getLength(), united3.getLength(),
-                united3Length, improved.getLength()));
+                triangulation5.getLength(), united1.getLength(),
+                united2.getLength(), united3.getLength(),
+                united4Length, improved.getLength()));
 
         Assert.assertTrue(triangulation1.getEdges().size() == triangulation2.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == triangulation3.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == triangulation4.getEdges().size());
+        Assert.assertTrue(triangulation1.getEdges().size() == triangulation5.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == united1.getEdges().size());
         Assert.assertTrue(triangulation1.getEdges().size() == united2.getEdges().size());
-        Assert.assertTrue(triangulation1.getEdges().size() == united3Size);
+        Assert.assertTrue(triangulation1.getEdges().size() == united3.getEdges().size());
+        Assert.assertTrue(triangulation1.getEdges().size() == united4Size);
         Assert.assertTrue(triangulation1.getEdges().size() == improved.getEdges().size());
     }
 }

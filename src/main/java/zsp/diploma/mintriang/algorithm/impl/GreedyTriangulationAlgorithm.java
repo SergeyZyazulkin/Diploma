@@ -25,7 +25,8 @@ public class GreedyTriangulationAlgorithm implements TriangulationAlgorithm {
     public Triangulation triangulate(List<Point> points) throws TriangulationException {
         points = checkInput(points);
         List<Edge> edges = buildAllEdges(points);
-        List<Edge> triangulationEdges = findTriangulationEdges(edges);
+        List<Edge> prepared = prepareEdges(edges);
+        List<Edge> triangulationEdges = findTriangulationEdges(prepared);
         return buildTriangulation(points, triangulationEdges);
     }
 
@@ -42,11 +43,13 @@ public class GreedyTriangulationAlgorithm implements TriangulationAlgorithm {
         return edges;
     }
 
-    private List<Edge> findTriangulationEdges(List<Edge> edges) {
-        List<Edge> sorted = edges.parallelStream()
+    protected List<Edge> prepareEdges(List<Edge> edges) {
+        return edges.parallelStream()
                 .sorted(Comparator.comparingDouble(Edge::getLength))
                 .collect(Collectors.toList());
+    }
 
+    private List<Edge> findTriangulationEdges(List<Edge> sorted) {
         List<Edge> triangulationEdges = new ArrayList<>();
 
         for (Edge edge : sorted) {
