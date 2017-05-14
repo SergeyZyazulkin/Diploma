@@ -8,7 +8,9 @@ import zsp.diploma.mintriang.exception.AlgorithmIncompleteException;
 import zsp.diploma.mintriang.exception.TriangulationException;
 import zsp.diploma.mintriang.model.geometry.*;
 import zsp.diploma.mintriang.util.Checker;
+import zsp.diploma.mintriang.util.Visualizer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MTHeuristic1 implements TriangulationAlgorithm {
@@ -45,9 +47,14 @@ public class MTHeuristic1 implements TriangulationAlgorithm {
     @Override
     public Triangulation triangulate(List<Point> points) throws TriangulationException {
         points = checkInput(points);
+        Visualizer.visualize(geometryFactory.createTriangulation(points, new ArrayList<>()), "zPoints.png");
         Hull convexHull = convexHullBuilder.buildConvexHull(geometryFactory, points);
+        Visualizer.visualize(geometryFactory.createTriangulation(convexHull), "zConvexHull.png");
         GeneralPolygon generalPolygon = convexGeneralPolygonBuilder.buildGeneralPolygon(geometryFactory, convexHull);
-        return generalPolygonTriangulationBuilder.buildTriangulation(geometryFactory, generalPolygon);
+        Visualizer.visualize(geometryFactory.createTriangulation(generalPolygon),"zGPH1.png");
+        Triangulation t = generalPolygonTriangulationBuilder.buildTriangulation(geometryFactory, generalPolygon);
+        Visualizer.visualize(t, "zH1.png");
+        return t;
     }
 
     public static class Builder {

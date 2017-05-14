@@ -8,6 +8,7 @@ import zsp.diploma.mintriang.exception.AlgorithmIncompleteException;
 import zsp.diploma.mintriang.exception.TriangulationException;
 import zsp.diploma.mintriang.model.geometry.*;
 import zsp.diploma.mintriang.util.Checker;
+import zsp.diploma.mintriang.util.Visualizer;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +48,12 @@ public class MTHeuristic2 implements TriangulationAlgorithm {
         Hull convexHull = convexHullBuilder.buildConvexHull(geometryFactory, points);
         List<GeneralPolygon> generalPolygons = generalPolygonsBuilder.buildGeneralPolygons(geometryFactory, convexHull);
 
+        List<Triangulation> ts = generalPolygons.stream()
+                .map(geometryFactory::createTriangulation)
+                .collect(Collectors.toList());
+
+        Visualizer.visualize(geometryFactory.createTriangulation(ts), "zGPsH2.png");
+
         List<Triangulation> triangulations = generalPolygons.parallelStream()
                 .map(gp -> {
                     try {
@@ -57,7 +64,9 @@ public class MTHeuristic2 implements TriangulationAlgorithm {
                 })
                 .collect(Collectors.toList());
 
-        return geometryFactory.createTriangulation(triangulations);
+        Triangulation t = geometryFactory.createTriangulation(triangulations);
+        Visualizer.visualize(t, "zH2.png");
+        return t;
     }
 
     public static class Builder {

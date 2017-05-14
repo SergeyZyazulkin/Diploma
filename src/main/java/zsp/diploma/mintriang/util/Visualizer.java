@@ -30,16 +30,24 @@ public class Visualizer {
     private static final int BOUND = 1;
     private static final int MAX_SIZE = 800;
     private static final int POINT_RADIUS = 2;
+    private static boolean b = true;
 
     public static void visualize(Triangulation triangulation) {
         visualize(triangulation, null);
     }
 
     public static void visualize(Triangulation triangulation, String name) {
-        XYSeriesCollection xySeriesCollection = createDataSet(triangulation);
-        Edge chartEdge = getChartEdge(triangulation);
-        JFreeChart chart = customizeChart(chartEdge, xySeriesCollection);
-        saveChart(chart, chartEdge, name);
+        if (!name.equals("zTU.png") || b) {
+            if (name.equals("zTU.png")) {
+                b = false;
+            }
+
+            System.out.println(String.format("%s: %f", name, triangulation.getLength()));
+            XYSeriesCollection xySeriesCollection = createDataSet(triangulation);
+            Edge chartEdge = getChartEdge(triangulation);
+            JFreeChart chart = customizeChart(chartEdge, xySeriesCollection);
+            saveChart(chart, chartEdge, name);
+        }
     }
 
     private static XYSeriesCollection createDataSet(Triangulation triangulation) {
@@ -113,7 +121,7 @@ public class Visualizer {
                     -POINT_RADIUS, -POINT_RADIUS, 2 * POINT_RADIUS, 2 * POINT_RADIUS));
 
             renderer.setSeriesFillPaint(i, Color.BLACK);
-            renderer.setSeriesStroke(i, new BasicStroke(2));
+            renderer.setSeriesStroke(i, new BasicStroke(1));
         }
 
         plot.setRenderer(renderer);

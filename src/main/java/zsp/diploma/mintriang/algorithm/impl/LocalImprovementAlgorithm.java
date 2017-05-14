@@ -8,6 +8,7 @@ import zsp.diploma.mintriang.exception.TriangulationException;
 import zsp.diploma.mintriang.model.geometry.*;
 import zsp.diploma.mintriang.util.Checker;
 import zsp.diploma.mintriang.util.Geometry;
+import zsp.diploma.mintriang.util.Visualizer;
 
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +55,7 @@ public class LocalImprovementAlgorithm implements zsp.diploma.mintriang.algorith
         GeneralPolygon localGeneralPolygon;
         double lengthBefore;
         double lengthAfter;
+        boolean vis = true;
 
         do {
             triangulation.normalize();
@@ -75,8 +77,14 @@ public class LocalImprovementAlgorithm implements zsp.diploma.mintriang.algorith
             }
 
             lengthAfter = triangulation.getLength();
+
+            if (vis) {
+                vis = false;
+                Visualizer.visualize(triangulation, "zPartLI.png");
+            }
         } while (lengthAfter < lengthBefore);
 
+        Visualizer.visualize(triangulation, "zLI.png");
         return triangulation;
     }
 

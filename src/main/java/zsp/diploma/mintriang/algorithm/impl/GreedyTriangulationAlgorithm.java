@@ -7,6 +7,7 @@ import zsp.diploma.mintriang.model.geometry.GeometryFactory;
 import zsp.diploma.mintriang.model.geometry.Point;
 import zsp.diploma.mintriang.model.geometry.Triangulation;
 import zsp.diploma.mintriang.util.Geometry;
+import zsp.diploma.mintriang.util.Visualizer;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,10 +28,12 @@ public class GreedyTriangulationAlgorithm implements TriangulationAlgorithm {
         List<Edge> edges = buildAllEdges(points);
         List<Edge> prepared = prepareEdges(edges);
         List<Edge> triangulationEdges = findTriangulationEdges(prepared);
-        return buildTriangulation(points, triangulationEdges);
+        Triangulation t = buildTriangulation(points, triangulationEdges);
+        Visualizer.visualize(t, "zGreedy.png");
+        return t;
     }
 
-    private List<Edge> buildAllEdges(List<Point> points) {
+    protected List<Edge> buildAllEdges(List<Point> points) {
         List<Edge> edges = new ArrayList<>();
         int pointsSize = points.size();
 
@@ -49,7 +52,7 @@ public class GreedyTriangulationAlgorithm implements TriangulationAlgorithm {
                 .collect(Collectors.toList());
     }
 
-    private List<Edge> findTriangulationEdges(List<Edge> sorted) {
+    protected List<Edge> findTriangulationEdges(List<Edge> sorted) {
         List<Edge> triangulationEdges = new ArrayList<>();
 
         for (Edge edge : sorted) {
@@ -72,7 +75,7 @@ public class GreedyTriangulationAlgorithm implements TriangulationAlgorithm {
         return triangulationEdges;
     }
 
-    private Triangulation buildTriangulation(List<Point> points, List<Edge> edges) {
+    protected Triangulation buildTriangulation(List<Point> points, List<Edge> edges) {
         edges.forEach(Edge::addToPoints);
         return geometryFactory.createTriangulation(points, edges);
     }

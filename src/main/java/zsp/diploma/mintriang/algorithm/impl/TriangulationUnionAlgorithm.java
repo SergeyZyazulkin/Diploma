@@ -9,6 +9,7 @@ import zsp.diploma.mintriang.model.geometry.DicotNetwork;
 import zsp.diploma.mintriang.model.geometry.GeometryFactory;
 import zsp.diploma.mintriang.model.geometry.Triangulation;
 import zsp.diploma.mintriang.util.Checker;
+import zsp.diploma.mintriang.util.Visualizer;
 
 public class TriangulationUnionAlgorithm implements UnionAlgorithm {
 
@@ -41,7 +42,9 @@ public class TriangulationUnionAlgorithm implements UnionAlgorithm {
             throws TriangulationException {
 
         DicotNetwork dicotNetwork = dicotNetworkBuilder.buildDicotNetwork(geometryFactory, triangulation1, triangulation2);
-        return triangulationCombiner.buildUnitedTriangulation(geometryFactory, dicotNetwork);
+        Triangulation t = triangulationCombiner.buildUnitedTriangulation(geometryFactory, dicotNetwork);
+        Visualizer.visualize(t, "zTU.png");
+        return t;
     }
 
     public static class Builder {

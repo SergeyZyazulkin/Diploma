@@ -1,11 +1,12 @@
 package zsp.diploma.mintriang;
 
+import zsp.diploma.mintriang.model.geometry.Point;
+
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
-        double v1 = Double.POSITIVE_INFINITY;
-        double v2 = 1;
 
-        System.out.println(Math.min(1, v1 + v2));
     }
 }

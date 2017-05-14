@@ -19,6 +19,7 @@ import zsp.diploma.mintriang.test.util.Visualizer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,10 +27,11 @@ import java.util.stream.Stream;
 public class BaseTest {
 
     private static final double LIMIT = 200;
+    private static final Random random = new Random();
 
-    protected static GeometryFactory geometryFactory = new GeometryFactoryImpl();
+    public static GeometryFactory geometryFactory = new GeometryFactoryImpl();
 
-    protected static List<Point> buildPoints(Vector... vectors) {
+    public static List<Point> buildPoints(Vector... vectors) {
         List<Point> points = new ArrayList<>();
 
         for (Vector vector : vectors) {
@@ -39,7 +41,7 @@ public class BaseTest {
         return points;
     }
 
-    protected static List<Edge> buildEdges(List<Point> points, Pair<Integer, Integer>... pairs) {
+    public static List<Edge> buildEdges(List<Point> points, Pair<Integer, Integer>... pairs) {
         List<Edge> edges = new ArrayList<>();
 
         for (Pair<Integer, Integer> pair : pairs) {
@@ -49,7 +51,7 @@ public class BaseTest {
         return edges;
     }
 
-    protected static List<Point> buildPoints(List<Point> points, Integer... indexes) {
+    public static List<Point> buildPoints(List<Point> points, Integer... indexes) {
         List<Point> result = new ArrayList<>();
 
         for (Integer index : indexes) {
@@ -67,27 +69,31 @@ public class BaseTest {
         return l1.size() == l2.size() && l1.containsAll(l2) && l2.containsAll(l1);
     }
 
-    protected static Triangulation buildTriangulation(List<Point> points, List<Edge> edges) {
+    public static Triangulation buildTriangulation(List<Point> points, List<Edge> edges) {
         return geometryFactory.createTriangulation(points, edges);
     }
 
-    protected static List<Point> clone(List<Point> points) {
+    public static List<Point> clone(List<Point> points) {
         return points.parallelStream().map(Point::clonePoint).collect(Collectors.toList());
     }
 
-    protected static List<Point> getRandomPoints(int count) {
+    public static List<Point> getRandomPoints(int count) {
         return Stream.generate(BaseTest::getRandomVector)
                 .limit(count)
                 .map(geometryFactory::createPoint)
                 .collect(Collectors.toList());
     }
 
-    private static Vector getRandomVector() {
+    public static Vector getRandomVector() {
         return new Vector(getRandom(), getRandom());
     }
 
-    private static double getRandom() {
+    public static double getRandom() {
         return (Math.random() - 0.5) * LIMIT;
+    }
+
+    public static double getNormalRandom() {
+        return random.nextGaussian() * 50;
     }
 
     public void testAll() throws TriangulationException {

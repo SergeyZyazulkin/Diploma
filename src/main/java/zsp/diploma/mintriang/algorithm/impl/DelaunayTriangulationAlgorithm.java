@@ -9,6 +9,7 @@ import zsp.diploma.mintriang.model.geometry.GeometryFactory;
 import zsp.diploma.mintriang.model.geometry.Point;
 import zsp.diploma.mintriang.model.geometry.Triangulation;
 import zsp.diploma.mintriang.util.Checker;
+import zsp.diploma.mintriang.util.Visualizer;
 
 import java.util.List;
 
@@ -43,7 +44,10 @@ public class DelaunayTriangulationAlgorithm implements TriangulationAlgorithm {
     public Triangulation triangulate(List<Point> points) throws TriangulationException {
         points = checkInput(points);
         Triangulation baseTriangulation = baseTriangulationBuilder.buildBaseTriangulation(geometryFactory, points);
-        return delaunayConditionChecker.improveTriangulation(geometryFactory, baseTriangulation);
+        Visualizer.visualize(baseTriangulation, "zBaseD.png");
+        Triangulation t = delaunayConditionChecker.improveTriangulation(geometryFactory, baseTriangulation);
+        Visualizer.visualize(t, "zDelaunay.png");
+        return t;
     }
 
     public static class Builder {
